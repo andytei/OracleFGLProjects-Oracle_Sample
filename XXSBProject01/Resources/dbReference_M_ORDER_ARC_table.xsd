@@ -1,0 +1,67 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_M_ORDER_ARC" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_M_ORDER_ARC" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="MOrderArcCollection" type="MOrderArcCollection"/>
+   <xs:complexType name="MOrderArcCollection">
+      <xs:sequence>
+         <xs:element name="MOrderArc" type="MOrderArc" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="MOrderArc">
+      <xs:sequence>
+         <xs:element name="spordOdKig" type="string2" minOccurs="0"/>
+         <xs:element name="spordOdkey3" type="string4" minOccurs="0"/>
+         <xs:element name="spordOdNo1" type="string2" minOccurs="0"/>
+         <xs:element name="spordOdkey2" type="string4"/>
+         <xs:element name="spordOdMei" type="string40" minOccurs="0" nillable="true"/>
+         <xs:element name="spordHaishi" type="xs:int" minOccurs="0" nillable="true"/>
+         <xs:element name="spordKaibi" type="xs:int" minOccurs="0" nillable="true"/>
+         <xs:element name="spordHeNo" type="string12" minOccurs="0" nillable="true"/>
+         <xs:element name="spordJiCd" type="string2" minOccurs="0" nillable="true"/>
+         <xs:element name="spordMaKbn" type="string1" minOccurs="0" nillable="true"/>
+         <xs:element name="spordShikbn" type="string1" minOccurs="0" nillable="true"/>
+         <xs:element name="spordYobi1" type="string42" minOccurs="0" nillable="true"/>
+         <xs:element name="spordWsMei" type="string8" minOccurs="0" nillable="true"/>
+         <xs:element name="spordTorobi" type="xs:int" minOccurs="0" nillable="true"/>
+         <xs:element name="spordKosnbi" type="xs:int" minOccurs="0" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="dbReference_M_ORDER_ARCSelectInputParameters" type="dbReference_M_ORDER_ARCSelect"/>
+   <xs:complexType name="dbReference_M_ORDER_ARCSelect">
+      <xs:sequence/>
+   </xs:complexType>
+   <xs:simpleType name="string2">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="2"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string4">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="4"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string40">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="40"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string12">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="12"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string1">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="1"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string42">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="42"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string8">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="8"/>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

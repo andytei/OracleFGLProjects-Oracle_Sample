@@ -1,0 +1,6 @@
+<view_states>
+   <function arity="3" name="getCustomerInfo">
+      <source_tree_view last.visible.row="41" last.visible.path="/sourceRoot[[0]]/account_output[[2]]/registration_details[[12]]" first.visible.path="/sourceRoot[[0]]/order_output[[1]]/orders[[0]]/brokerage_code[[12]]" expanded.paths="/sourceRoot[[0]]/customer[[0]]&#xA;/sourceRoot[[0]]/order_output[[1]]&#xA;/sourceRoot[[0]]/order_output[[1]]/orders[[0]]&#xA;/sourceRoot[[0]]/account_output[[2]]" first.visible.row="25" selected.paths=""/>
+      <target_tree_view last.visible.row="29" last.visible.path="/TargetRoot[[0]]/migrated_customer[[0]]/customer_orders[[10]]/order[[0]]/条件付き[[9]]" first.visible.path="/TargetRoot[[0]]/migrated_customer[[0]]/条件付き[[8]]/empty-sequence[[1]]" expanded.paths="/TargetRoot[[0]]/migrated_customer[[0]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/条件付き[[7]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/条件付き[[8]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_accounts[[9]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_orders[[10]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_orders[[10]]/order[[0]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_orders[[10]]/order[[0]]/条件付き[[5]]" first.visible.row="13" selected.paths=""/>
+   </function>
+</view_states>

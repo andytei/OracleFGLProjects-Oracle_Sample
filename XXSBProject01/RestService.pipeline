@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:pipelineEntry xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con2="http://www.bea.com/wli/sb/stages/config" xmlns:con3="http://www.bea.com/wli/sb/stages/logging/config">
+    <con:coreEntry>
+        <con:binding type="Native REST" xsi:type="con:NativeRestBindingType">
+            <con:wadl ref="XXSBProject01/Resources/RestService"/>
+        </con:binding>
+        <con:xqConfiguration>
+            <con:snippetVersion>1.0</con:snippetVersion>
+        </con:xqConfiguration>
+    </con:coreEntry>
+    <con:router>
+        <con:pipeline type="request" name="request-7f000001.467e54b3.0.165a53d77f2.N8000">
+            <con:stage id="_StageId-7f000001.467e54b3.0.165a53d77f2.N7ffe" name="call Database">
+                <con:context/>
+                <con:actions>
+                    <con1:assign varName="XXSYSDATE">
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7ec5</con2:id>
+                        <con1:expr>
+                            <con2:xqueryText>(fn-bea:execute-sql("JDBC/TEST03", "rowElemName", "SELECT SYSDATE FROM DUAL"))/SYSDATE/text()</con2:xqueryText>
+                        </con1:expr>
+                    </con1:assign>
+                    <con3:log>
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7efa</con2:id>
+                        <con3:logLevel>warning</con3:logLevel>
+                        <con3:expr>
+                            <con2:xqueryText>fn:concat("---------- start ----------:",$XXSYSDATE)</con2:xqueryText>
+                        </con3:expr>
+                        <con3:message/>
+                    </con3:log>
+                    <con1:wsCallout>
+                        <con2:id>_ActionId-7f000001.467e54b3.0.165a53d77f2.N7ff8</con2:id>
+                        <con1:service ref="XXSBProject01/dbReference_M_ORDER_ARC" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                        <con1:operation>dbReference_M_ORDER_ARCSelect</con1:operation>
+                        <con1:request>
+                            <con1:body wrapped="false">dbParam</con1:body>
+                        </con1:request>
+                        <con1:response>
+                            <con1:body wrapped="false">dbResult</con1:body>
+                        </con1:response>
+                        <con1:requestTransform>
+                            <con1:assign varName="dbParam">
+                                <con2:id>_ActionId-7f000001.467e54b3.0.165a53d77f2.N7ff5</con2:id>
+                                <con1:expr>
+                                    <con2:xqueryText>&lt;dbr:dbReference_M_ORDER_ARCSelectInputParameters 
+xmlns:dbr="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_M_ORDER_ARC"/></con2:xqueryText>
+                                </con1:expr>
+                            </con1:assign>
+                        </con1:requestTransform>
+                        <con1:responseTransform/>
+                    </con1:wsCallout>
+                </con:actions>
+            </con:stage>
+            <con:stage id="_StageId-7f000001.N77d70e61.0.165d307acd6.N7f8e" name="Loop">
+                <con:context/>
+                <con:actions>
+                    <con1:foreach>
+                        <con2:id>_ActionId-7f000001.N77d70e61.0.165d307acd6.N7f8b</con2:id>
+                        <con1:variable>dbResult</con1:variable>
+                        <con1:expression>
+                            <con2:xpathText>./*:MOrderArc</con2:xpathText>
+                        </con1:expression>
+                        <con1:value-variable>body</con1:value-variable>
+                        <con1:index-variable>idx</con1:index-variable>
+                        <con1:total-variable>cnt</con1:total-variable>
+                        <con1:actions>
+                            <con1:assign varName="cpqParam">
+                                <con2:id>_ActionId-7f000001.467e54b3.0.165a53d77f2.N7fef</con2:id>
+                                <con1:expr>
+                                    <con2:xsltTransform>
+                                        <con2:resource ref="XXSBProject01/mapmodifyPartsDB2CPQ"/>
+                                        <con2:input>&lt;MOrderArcCollection 	xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_M_ORDER_ARC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+{$body}
+&lt;/MOrderArcCollection></con2:input>
+                                    </con2:xsltTransform>
+                                </con1:expr>
+                            </con1:assign>
+                            <con1:wsCallout>
+                                <con2:id>_ActionId-7f000001.467e54b3.0.165a53d77f2.N7ff2</con2:id>
+                                <con1:service ref="XXSBProject01/BusinessServiceCPQParts" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                                <con1:operation>modifyParts</con1:operation>
+                                <con1:request>
+                                    <con1:body wrapped="false">cpqParam</con1:body>
+                                    <con1:header>header</con1:header>
+                                    <con1:attachments/>
+                                </con1:request>
+                                <con1:response>
+                                    <con1:body wrapped="false">cpqResult</con1:body>
+                                    <con1:header/>
+                                </con1:response>
+                                <con1:requestTransform>
+                                    <con1:assign varName="header">
+                                        <con2:id>_ActionId-7f000001.57098938.0.165a82b332d.N7ffb</con2:id>
+                                        <con1:expr>
+                                            <con2:xqueryText><![CDATA[<soap:Header xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <bm:category xmlns:bm="urn:soap.bigmachines.com">Parts</bm:category>
+    <bm:xsdInfo xmlns:bm="urn:soap.bigmachines.com">
+        <bm:schemaLocation>https://cpq-10183.bigmachines.com/bmfsweb/cpq-10183/schema/v1_0/parts/Parts.xsd</bm:schemaLocation>
+    </bm:xsdInfo>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+      <wsse:UsernameToken wsu:Id="UsernameToken-2">
+        <wsse:Username>onozawa</wsse:Username>
+        <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">jE5S$4HN2s</wsse:Password>
+      </wsse:UsernameToken>
+    </wsse:Security>
+</soap:Header>]]></con2:xqueryText>
+                                        </con1:expr>
+                                    </con1:assign>
+                                    <con3:log>
+                                        <con2:id>_ActionId-7f000001.N77d70e61.0.165d307acd6.N7f22</con2:id>
+                                        <con3:logLevel>debug</con3:logLevel>
+                                    </con3:log>
+                                </con1:requestTransform>
+                                <con1:responseTransform>
+                                    <con3:log>
+                                        <con2:id>_ActionId-N3f57c7ff.2d15e913.0.165c1fab675.N7fca</con2:id>
+                                        <con3:logLevel>warning</con3:logLevel>
+                                        <con3:expr>
+                                            <con2:xqueryText>$cpqResult</con2:xqueryText>
+                                        </con3:expr>
+                                    </con3:log>
+                                </con1:responseTransform>
+                            </con1:wsCallout>
+                        </con1:actions>
+                    </con1:foreach>
+                </con:actions>
+            </con:stage>
+            <con:stage id="_StageId-7f000001.467e54b3.0.165a53d77f2.N7ffc" name="mapping : DB -> CPQ">
+                <con:context/>
+                <con:actions/>
+            </con:stage>
+            <con:stage id="_StageId-7f000001.467e54b3.0.165a53d77f2.N7ffb" name="call CPQ" errorHandler="error-7f000001.5597edb2.0.165b2c556b0.N7f68">
+                <con:context/>
+                <con:actions>
+                    <con3:log>
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7ffe</con2:id>
+                        <con3:logLevel>warning</con3:logLevel>
+                        <con3:expr>
+                            <con2:xqueryText>fn:concat("---------- end ----------:",$XXSYSDATE)</con2:xqueryText>
+                        </con3:expr>
+                        <con3:message/>
+                    </con3:log>
+                </con:actions>
+            </con:stage>
+        </con:pipeline>
+        <con:pipeline type="response" name="response-7f000001.467e54b3.0.165a53d77f2.N7fff">
+            <con:stage id="_StageId-7f000001.467e54b3.0.165a53d77f2.N7ffd" name="ステージ1">
+                <con:context/>
+                <con:actions/>
+            </con:stage>
+        </con:pipeline>
+        <con:pipeline type="error" name="error-7f000001.5597edb2.0.165b2c556b0.N7f68">
+            <con:stage id="_StageId-7f000001.5597edb2.0.165b2c556b0.N7f67" name="ステージ1">
+                <con:context/>
+                <con:actions>
+                    <con3:log>
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7f34</con2:id>
+                        <con3:logLevel>warning</con3:logLevel>
+                        <con3:expr>
+                            <con2:xqueryText>fn:concat("---------- error ----------:",$XXSYSDATE)</con2:xqueryText>
+                        </con3:expr>
+                    </con3:log>
+                    <con3:log>
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7e90</con2:id>
+                        <con3:logLevel>error</con3:logLevel>
+                        <con3:expr>
+                            <con2:xqueryText>fn-bea:serialize($fault)</con2:xqueryText>
+                        </con3:expr>
+                    </con3:log>
+                    <con1:insert varName="body">
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7f31</con2:id>
+                        <con1:where>last-child</con1:where>
+                        <con1:expr>
+                            <con2:xqueryText>$fault</con2:xqueryText>
+                        </con1:expr>
+                    </con1:insert>
+                    <con2:reply>
+                        <con2:id>_ActionId-7f000001.5597edb2.0.165b2c556b0.N7f2d</con2:id>
+                    </con2:reply>
+                </con:actions>
+            </con:stage>
+        </con:pipeline>
+        <con:flow>
+            <con:pipeline-node name="パイプライン・ペア・ノード1">
+                <con:request>request-7f000001.467e54b3.0.165a53d77f2.N8000</con:request>
+                <con:response>response-7f000001.467e54b3.0.165a53d77f2.N7fff</con:response>
+            </con:pipeline-node>
+        </con:flow>
+        <con:partner-links/>
+    </con:router>
+</con:pipelineEntry>

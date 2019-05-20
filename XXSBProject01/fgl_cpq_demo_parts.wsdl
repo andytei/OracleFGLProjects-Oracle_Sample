@@ -1,0 +1,526 @@
+<wsdl:definitions xmlns:bmxsd="http://xmlns.oracle.com/cpqcloud/parts" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/cpqcloud/parts">
+<wsp:Policy xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="cpq_service_policy">
+<wsp:ExactlyOne>
+<wsp:All>
+<wsp:Policy>
+<sp:SupportingTokens>
+<wsp:Policy>
+<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssUsernameToken10/>
+</wsp:Policy>
+</sp:UsernameToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:Policy>
+</wsp:All>
+<wsp:All>
+<wsp:Policy>
+<sp:SupportingTokens>
+<wsp:Policy>
+<sp:HttpsToken>
+<wsp:Policy>
+<sp:HttpBasicAuthentication/>
+</wsp:Policy>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:Policy>
+</wsp:All>
+</wsp:ExactlyOne>
+</wsp:Policy>
+<wsdl:types>
+<xsd:schema xmlns:bmxsd="http://xmlns.oracle.com/cpqcloud/parts" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/cpqcloud/parts">
+<xsd:simpleType name="IntOrBlank">
+<xsd:union memberTypes="xsd:integer">
+<xsd:simpleType>
+<xsd:restriction base="xsd:token">
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:union>
+</xsd:simpleType>
+<xsd:simpleType name="LongOrBlank">
+<xsd:union memberTypes="xsd:long">
+<xsd:simpleType>
+<xsd:restriction base="xsd:token">
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:union>
+</xsd:simpleType>
+<xsd:simpleType name="FloatOrBlank">
+<xsd:union memberTypes="xsd:float">
+<xsd:simpleType>
+<xsd:restriction base="xsd:token">
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:union>
+</xsd:simpleType>
+<xsd:simpleType name="DoubleOrBlank">
+<xsd:union memberTypes="xsd:double">
+<xsd:simpleType>
+<xsd:restriction base="xsd:token">
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:union>
+</xsd:simpleType>
+<xsd:simpleType name="BooleanOrBlank">
+<xsd:union memberTypes="xsd:boolean">
+<xsd:simpleType>
+<xsd:restriction base="xsd:token">
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:union>
+</xsd:simpleType>
+<xsd:simpleType name="ByteOrBlank">
+<xsd:union memberTypes="xsd:byte">
+<xsd:simpleType>
+<xsd:restriction base="xsd:token">
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:union>
+</xsd:simpleType>
+<xsd:complexType name="anyType">
+<xsd:sequence maxOccurs="1" minOccurs="1">
+<xsd:any maxOccurs="unbounded" minOccurs="0" processContents="skip"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="FaultType">
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="exceptionCode" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="1" name="exceptionMessage" nillable="false" type="xsd:string"/>
+</xsd:all>
+</xsd:complexType>
+<xsd:element name="fault">
+<xsd:complexType>
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="exceptionCode" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="1" name="exceptionMessage" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="exceptionDescription" nillable="true" type="xsd:string"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:complexType name="CriteriaType">
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="1" name="field" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="unbounded" minOccurs="1" name="value" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="1" name="comparator" nillable="false">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="=|&lt;&gt;|&gt;|&lt;|&gt;=|&lt;=|LIKE|IN|NOT IN"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="PartType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="each_record" nillable="false" type="bmxsd:EachRecordType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="RetrieveType">
+<xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="1" name="criteria" nillable="false" type="bmxsd:CriteriaType"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="PriceType">
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="0" name="USD" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="EUR" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(,[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="CAD" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="GBP" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="AUD" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="CNY" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="JPY" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9]+)|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="KRW" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9]+)|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="MXN" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="RUB" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(,[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="SAR" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(.[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="BRL" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:pattern value="([0-9])*(,[0-9]{1,2})?|"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="TranslatedType">
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="0" name="en" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="de" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="fr" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="es" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="it" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="zh_CN" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="zh_TW" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="fr_CA" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="ja_JP" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="ko_KR" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="pt_BR" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="ru_RU" nillable="false" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="pt_PT" nillable="false" type="xsd:string"/>
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="EachRecordType">
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="0" name="company_associations" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="1" name="part_number" nillable="false" type="bmxsd:String128"/>
+<xsd:element default="1" maxOccurs="1" minOccurs="0" name="direct_buy" nillable="false">
+<xsd:simpleType>
+<xsd:restriction base="xsd:long">
+<xsd:enumeration value="1"/>
+<xsd:enumeration value="2"/>
+<xsd:enumeration value="3"/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="description" nillable="true" type="bmxsd:TranslatedType"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="units" nillable="true" type="bmxsd:TranslatedType"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="file_one" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="file_two" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="file_three" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="file_four" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="lead_time" nillable="true" type="bmxsd:LongOrBlank"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field1" nillable="true" type="bmxsd:String255"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field3" nillable="true" type="bmxsd:String255"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field4" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="Per Month"/>
+<xsd:enumeration value="Per Year"/>
+<xsd:enumeration value="Per Hour"/>
+<xsd:enumeration value="Per Day"/>
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element default="0.0" maxOccurs="1" minOccurs="0" name="_part_custom_field5" nillable="true" type="bmxsd:DoubleOrBlank"/>
+<xsd:element default="0.0" maxOccurs="1" minOccurs="0" name="_part_custom_field6" nillable="true" type="bmxsd:DoubleOrBlank"/>
+<xsd:element default="0" maxOccurs="1" minOccurs="0" name="_part_custom_field7" nillable="true" type="bmxsd:IntOrBlank"/>
+<xsd:element default="One Time" maxOccurs="1" minOccurs="0" name="_part_custom_field8" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="One Time"/>
+<xsd:enumeration value="Recurring"/>
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field27" nillable="true" type="bmxsd:String255"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field28" nillable="true">
+<xsd:simpleType>
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="Yes"/>
+<xsd:enumeration value="No"/>
+<xsd:enumeration value=""/>
+</xsd:restriction>
+</xsd:simpleType>
+</xsd:element>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field29" nillable="true" type="bmxsd:String255"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="_part_custom_field30" nillable="true" type="bmxsd:String255"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="partner_part_id" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="partner_std_pbook_entry_id" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="partner_organization_id" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="part_display_number" nillable="true" type="bmxsd:String128"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="price" nillable="true" type="bmxsd:PriceType"/>
+</xsd:all>
+</xsd:complexType>
+<xsd:simpleType name="String128">
+<xsd:restriction base="xsd:string">
+<xsd:maxLength value="128"/>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="String255">
+<xsd:restriction base="xsd:string">
+<xsd:maxLength value="255"/>
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="CommonStatusType">
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="0" name="success" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="message" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="records_read" nillable="true" type="xsd:int"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="records_failed" nillable="true" type="xsd:int"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="records_deleted" nillable="true" type="xsd:int"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="records_returned" nillable="true" type="xsd:int"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="records_inserted" nillable="true" type="xsd:int"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="records_updated" nillable="true" type="xsd:int"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="detail" nillable="true" type="xsd:string"/>
+<xsd:element maxOccurs="1" minOccurs="0" name="warning" nillable="true" type="xsd:string"/>
+</xsd:all>
+</xsd:complexType>
+<xsd:element name="getParts">
+<xsd:complexType>
+<xsd:all>
+<xsd:element name="Parts" type="bmxsd:RetrieveType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="getPartsResponse">
+<xsd:complexType>
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="status" nillable="false" type="bmxsd:CommonStatusType"/>
+<xsd:element maxOccurs="1" minOccurs="1" name="Parts" nillable="false" type="bmxsd:PartType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="deleteParts">
+<xsd:complexType>
+<xsd:all>
+<xsd:element name="Parts" type="bmxsd:RetrieveType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="deletePartsResponse">
+<xsd:complexType>
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="status" nillable="false" type="bmxsd:CommonStatusType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="addParts">
+<xsd:complexType>
+<xsd:all>
+<xsd:element name="Parts" type="bmxsd:PartType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="addPartsResponse">
+<xsd:complexType>
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="status" nillable="false" type="bmxsd:CommonStatusType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="updateParts">
+<xsd:complexType>
+<xsd:all>
+<xsd:element name="Parts" type="bmxsd:PartType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="updatePartsResponse">
+<xsd:complexType>
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="status" nillable="false" type="bmxsd:CommonStatusType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="modifyParts">
+<xsd:complexType>
+<xsd:all>
+<xsd:element name="Parts" type="bmxsd:PartType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="modifyPartsResponse">
+<xsd:complexType>
+<xsd:all>
+<xsd:element maxOccurs="1" minOccurs="1" name="status" nillable="false" type="bmxsd:CommonStatusType"/>
+</xsd:all>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+</wsdl:types>
+<wsdl:message name="getPartsRequest">
+<wsdl:part element="bmxsd:getParts" name="getParts"/>
+</wsdl:message>
+<wsdl:message name="getPartsResponse">
+<wsdl:part element="bmxsd:getPartsResponse" name="getPartsResponse"/>
+</wsdl:message>
+<wsdl:message name="BusinessLogicException">
+<wsdl:part element="bmxsd:fault" name="fault"/>
+</wsdl:message>
+<wsdl:message name="deletePartsRequest">
+<wsdl:part element="bmxsd:deleteParts" name="deleteParts"/>
+</wsdl:message>
+<wsdl:message name="deletePartsResponse">
+<wsdl:part element="bmxsd:deletePartsResponse" name="deletePartsResponse"/>
+</wsdl:message>
+<wsdl:message name="addPartsRequest">
+<wsdl:part element="bmxsd:addParts" name="addParts"/>
+</wsdl:message>
+<wsdl:message name="addPartsResponse">
+<wsdl:part element="bmxsd:addPartsResponse" name="addPartsResponse"/>
+</wsdl:message>
+<wsdl:message name="updatePartsRequest">
+<wsdl:part element="bmxsd:updateParts" name="updateParts"/>
+</wsdl:message>
+<wsdl:message name="updatePartsResponse">
+<wsdl:part element="bmxsd:updatePartsResponse" name="updatePartsResponse"/>
+</wsdl:message>
+<wsdl:message name="modifyPartsRequest">
+<wsdl:part element="bmxsd:modifyParts" name="modifyParts"/>
+</wsdl:message>
+<wsdl:message name="modifyPartsResponse">
+<wsdl:part element="bmxsd:modifyPartsResponse" name="modifyPartsResponse"/>
+</wsdl:message>
+<wsdl:portType name="PartServicePortType">
+<wsdl:operation name="getParts">
+<wsdl:input message="bmxsd:getPartsRequest"/>
+<wsdl:output message="bmxsd:getPartsResponse"/>
+<wsdl:fault message="bmxsd:BusinessLogicException" name="BusinessLogicException"/>
+</wsdl:operation>
+<wsdl:operation name="deleteParts">
+<wsdl:input message="bmxsd:deletePartsRequest"/>
+<wsdl:output message="bmxsd:deletePartsResponse"/>
+<wsdl:fault message="bmxsd:BusinessLogicException" name="BusinessLogicException"/>
+</wsdl:operation>
+<wsdl:operation name="addParts">
+<wsdl:input message="bmxsd:addPartsRequest"/>
+<wsdl:output message="bmxsd:addPartsResponse"/>
+<wsdl:fault message="bmxsd:BusinessLogicException" name="BusinessLogicException"/>
+</wsdl:operation>
+<wsdl:operation name="updateParts">
+<wsdl:input message="bmxsd:updatePartsRequest"/>
+<wsdl:output message="bmxsd:updatePartsResponse"/>
+<wsdl:fault message="bmxsd:BusinessLogicException" name="BusinessLogicException"/>
+</wsdl:operation>
+<wsdl:operation name="modifyParts">
+<wsdl:input message="bmxsd:modifyPartsRequest"/>
+<wsdl:output message="bmxsd:modifyPartsResponse"/>
+<wsdl:fault message="bmxsd:BusinessLogicException" name="BusinessLogicException"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="PartServiceBinding" type="bmxsd:PartServicePortType">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="getParts">
+<soap:operation soapAction=""/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="BusinessLogicException">
+<soap:fault name="BusinessLogicException" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="deleteParts">
+<soap:operation soapAction=""/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="BusinessLogicException">
+<soap:fault name="BusinessLogicException" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="addParts">
+<soap:operation soapAction=""/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="BusinessLogicException">
+<soap:fault name="BusinessLogicException" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="updateParts">
+<soap:operation soapAction=""/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="BusinessLogicException">
+<soap:fault name="BusinessLogicException" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="modifyParts">
+<soap:operation soapAction=""/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="BusinessLogicException">
+<soap:fault name="BusinessLogicException" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="PartService">
+<wsdl:port binding="bmxsd:PartServiceBinding" name="PartServicePort">
+<wsp:PolicyReference xmlns:wsp="http://www.w3.org/ns/ws-policy" URI="#cpq_service_policy"/>
+<soap:address location="https://cpq-10183.bigmachines.com/v2_0/receiver/parts"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

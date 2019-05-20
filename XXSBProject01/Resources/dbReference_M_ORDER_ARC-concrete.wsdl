@@ -1,0 +1,21 @@
+<wsdl:definitions targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/FGL_TEST01/SBProject/dbReference_M_ORDER_ARC" name="dbReference_M_ORDER_ARC-concrete" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:import location="dbReference_M_ORDER_ARC.wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/db/FGL_TEST01/SBProject/dbReference_M_ORDER_ARC"/>
+    <wsdl:binding name="dbReference_M_ORDER_ARC_ptt-binding" type="dbr:dbReference_M_ORDER_ARC_ptt" xmlns:dbr="http://xmlns.oracle.com/pcbpel/adapter/db/FGL_TEST01/SBProject/dbReference_M_ORDER_ARC">
+        <soap:binding style="document" transport="http://www.bea.com/wli/sb/transports/jca"/>
+        <wsdl:operation name="merge">
+            <soap:operation soapAction="merge"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="dbReference_M_ORDER_ARCSelect">
+            <soap:operation soapAction="dbReference_M_ORDER_ARCSelect"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+</wsdl:definitions>

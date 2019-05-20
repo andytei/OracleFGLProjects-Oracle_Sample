@@ -1,0 +1,27 @@
+<wsdl:definitions name="dbReference_M_ORDER_ARC" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/FGL_TEST01/SBProject/dbReference_M_ORDER_ARC" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/FGL_TEST01/SBProject/dbReference_M_ORDER_ARC" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:top="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_M_ORDER_ARC" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <plt:partnerLinkType name="dbReference_M_ORDER_ARC_plt">
+    <plt:role name="dbReference_M_ORDER_ARC_role">
+      <plt:portType name="tns:dbReference_M_ORDER_ARC_ptt"/>
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+        <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_M_ORDER_ARC" schemaLocation="dbReference_M_ORDER_ARC_table.xsd"/>
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="dbReference_M_ORDER_ARCSelect_inputParameters">
+        <wsdl:part name="dbReference_M_ORDER_ARCSelect_inputParameters" element="top:dbReference_M_ORDER_ARCSelectInputParameters"/>
+    </wsdl:message>
+    <wsdl:message name="MOrderArcCollection_msg">
+        <wsdl:part name="MOrderArcCollection" element="top:MOrderArcCollection"/>
+    </wsdl:message>
+    <wsdl:portType name="dbReference_M_ORDER_ARC_ptt">
+        <wsdl:operation name="merge">
+            <wsdl:input message="tns:MOrderArcCollection_msg"/>
+        </wsdl:operation>
+        <wsdl:operation name="dbReference_M_ORDER_ARCSelect">
+            <wsdl:input message="tns:dbReference_M_ORDER_ARCSelect_inputParameters"/>
+            <wsdl:output message="tns:MOrderArcCollection_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
